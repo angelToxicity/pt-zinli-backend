@@ -15,8 +15,6 @@ export class AppController {
     async getDb(): Promise<any> {
     let conn = this.db.run();
     let a = await conn.listCollections()
-    console.log(a)
-    // return this.db.run();
-    return "H";
+    return a;
   }
 }

@@ -8,7 +8,10 @@
             "command": "npm run start:debug",
             "name": "Run npm start",
             "request": "launch",
-            "type": "node-terminal"
+            "type": "node-terminal",
+            "env": {
+                "PATH": "C://tools//node-v21.7.3-win-x64;${env:PATH}"
+            }
         }
     ]
 }
