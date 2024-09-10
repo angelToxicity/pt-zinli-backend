@@ -1,8 +1,11 @@
+import { User, UserDocument } from "../schemas/user";
+
 export class PostStatsDto {
-    avatar: string;
-    username: string;
-    name: string;
-    surname: string;
-    role: string;
-    password: string;
+    image: string;
+    message: string;
+    location: string;
+    author: UserDocument;
+    status: string;
+    create_at: Date;
+    likes: UserDocument[];
 }

@@ -25,6 +25,10 @@ const uri = process.env.MONGODB_STRING;
         //   },
         // ],
       },
+      {
+        path: 'register',
+        module: UsersModule
+      },
     ]),
   ],
   controllers: [AppController],

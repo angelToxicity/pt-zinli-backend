@@ -1,8 +1,9 @@
 import { Controller, Get, Post, HttpCode, Body, HttpStatus, HttpException } from '@nestjs/common';
 import { AppService } from './app.service';
-import { UsersService } from "./users/users.module";
+import { UsersService } from "./users/users.service";
+import { PostService } from "./post/post.service";
 import { CryptoService } from "./crypto/crypto.service";
-import { LoginDtoDecrypt, SignDtoDecrypt } from "./dto/login-dto";
+import { LoginDtoDecrypt } from "./dto/login-dto";
 
 @Controller()
 export class AppController {
@@ -11,7 +12,7 @@ export class AppController {
   @Get('')
   @HttpCode(200)
   getInit(): any {
-    return "API - Prueba Técnica"
+    return this.appService.getHello()
   }
 
   @Post('login')
@@ -39,26 +40,4 @@ export class AppController {
     }
   }
   
-  @Post('register')
-  @HttpCode(200)
-  async signIn(@Body() signInfo:{data:string}): Promise<any> {
-    try {
-      let data:SignDtoDecrypt = JSON.parse(this.crypto.decryptData(signInfo.data))
-      data.password = await this.crypto.hashPassword(data.password)
-      data.role = 'user'
-      let res = await this.user.registerUser(data);
-      
-      if (!res) {
-        throw new HttpException({message: 'Usuario ya se encuentra registrado. Intente nuevamente'}, HttpStatus.BAD_REQUEST);
-      }
-  
-      return ({ data: "OK" })
-    } catch (error) {
-      console.log(error)
-      if (error) {
-        throw new HttpException({message: error.message}, error.status);
-      }
-      throw new HttpException({message: 'Error registrando usuario'}, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-  }
 }
