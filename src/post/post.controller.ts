@@ -25,6 +25,7 @@ export class PostController {
     //     }
   
     //     return ({ data: this.crypto.encryptData(JSON.stringify(res)) })
+        return ({ data: res })
       } catch (error) {
         console.log(error)
         if (error) {
