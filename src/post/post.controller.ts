@@ -3,7 +3,7 @@ import { PostService } from "./post.service";
 import { PostStatsDto } from "../dto/post-dto";
 import { CryptoService } from "src/crypto/crypto.service";
 
-@Controller('post')
+@Controller()
 export class PostController {
     constructor(private readonly post:PostService, private crypto:CryptoService) {}
 

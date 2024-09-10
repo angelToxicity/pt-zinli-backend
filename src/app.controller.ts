@@ -8,6 +8,12 @@ import { LoginDtoDecrypt, SignDtoDecrypt } from "./dto/login-dto";
 export class AppController {
   constructor(private readonly appService: AppService, private user:UsersService, private crypto:CryptoService) {}
   
+  @Get('')
+  @HttpCode(200)
+  getInit(): any {
+    return "API - Prueba Técnica"
+  }
+
   @Post('login')
   @HttpCode(200)
   async login(@Body() loginInfo:{data:string}): Promise<any> {
