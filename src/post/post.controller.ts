@@ -59,9 +59,10 @@ export class PostController {
     
     @Patch('status')
     @HttpCode(200)
-    async setStatus(@Body() postStatus:{data:{status:string, _id:string}}): Promise<any> {
+    async setStatus(@Body() postStatus:{data:string}): Promise<any> {
       try {
-        let res = await this.post.status(postStatus.data);  
+        const param = JSON.parse(this.crypto.decryptData(postStatus.data))
+        let res = await this.post.status(param);  
         return ({ data: this.crypto.encryptData(JSON.stringify(res)) })
       } catch (error) {
         console.log(error)
