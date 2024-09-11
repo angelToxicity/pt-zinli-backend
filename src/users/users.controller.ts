@@ -20,7 +20,7 @@ export class UsersController {
             throw new HttpException({message: 'Usuario ya se encuentra registrado. Intente nuevamente'}, HttpStatus.BAD_REQUEST);
         }
     
-        return ({ data: "OK" })
+        return ({ data: this.crypto.encryptData("OK") })
         } catch (error) {
         console.log(error)
         if (error) {
