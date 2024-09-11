@@ -1,9 +1,8 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Posts, Status } from "../schemas/post";
 import { CryptoService } from "../crypto/crypto.service";
-import { PostStatsDto } from "../dto/post-dto";
 
 @Injectable()
 export class PostService {
@@ -59,19 +58,57 @@ export class PostService {
     }
     
     async list(param:string): Promise<Posts[] | null> {
-      let query: any = {};
-      
+      const pipeline: any[] = [];
+
       if (param != 'all') {
-        query = { _id: param };
+        pipeline.push({
+          $match: {
+            'author._id': new Types.ObjectId(param),
+          },
+        });
       }
 
-      let res = await this.postModel.find(query).sort('-created_at').exec();
+      pipeline.push(
+        {
+          $lookup: {
+            from: 'status',
+            localField: 'status',
+            foreignField: 'status',
+            as: 'statusDetails'
+          },
+        },
+        {
+          $match: {
+            'status': { $ne: 'deleted' },
+          },
+        },
+        {
+          $unwind: '$statusDetails'
+        },
+        {
+          $addFields: {
+            description: '$statusDetails.description'
+          },
+        },
+        {
+          $project: {
+            statusDetails: 0
+          },
+        }
+      );
+
+      const res = await this.postModel.aggregate(pipeline).sort('-order');
       return res;
     }
     
     async create(data:Posts): Promise<any> {
       let createdPost = new this.postModel(data);
       let res = await createdPost.save();
+      return res;
+    }
+    
+    async status(info:{status:string, _id:string}): Promise<any> {
+      let res = await this.postModel.findByIdAndUpdate(info._id, { status: info.status });
       return res;
     }
 }

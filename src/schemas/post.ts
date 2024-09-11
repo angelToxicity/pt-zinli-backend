@@ -1,8 +1,20 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, SchemaTypes } from 'mongoose';
 import { User } from "./user";
 
 export type PostDocument = HydratedDocument<Posts>;
+
+@Schema()
+export class Status {
+    
+    @Prop()
+    status?: string;
+    
+    @Prop()
+    description: string;
+}
+
+export const StatusSchema = SchemaFactory.createForClass(Status);
 
 @Schema()
 export class Posts {
@@ -30,15 +42,3 @@ export class Posts {
 }
 
 export const PostSchema = SchemaFactory.createForClass(Posts);
-
-@Schema()
-export class Status {
-    
-    @Prop()
-    status?: string;
-    
-    @Prop()
-    description: string;
-}
-
-export const StatusSchema = SchemaFactory.createForClass(Status);

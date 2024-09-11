@@ -1,4 +1,4 @@
-import { Controller, Get, Post, HttpCode, Body, HttpStatus, HttpException, Param } from '@nestjs/common';
+import { Controller, Get, Post, HttpCode, Body, HttpStatus, HttpException, Param, Patch } from '@nestjs/common';
 import { PostService } from "./post.service";
 import { CryptoService } from "src/crypto/crypto.service";
 import { Posts } from "../schemas/post";
@@ -26,14 +26,14 @@ export class PostController {
     @HttpCode(200)
     async listPosts(@Param() params: any): Promise<any> {
       try {
-        let res = await this.post.list(params.mode);  
+        let res = await this.post.list(params.mode);
         return ({ data: this.crypto.encryptData(JSON.stringify(res)) })
       } catch (error) {
         console.log(error)
         if (error) {
-          throw new HttpException({message: error.message}, error.status);
+          throw new HttpException({message_err: error.message}, error.status);
         }
-        throw new HttpException({message: 'Error consultando estadisticas de posts'}, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException({message_err: 'Error consultando estadisticas de posts'}, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
     
@@ -51,9 +51,24 @@ export class PostController {
       } catch (error) {
         console.log(error)
         if (error) {
-          throw new HttpException({message: error.message}, error.status);
+          throw new HttpException({message_err: error.message}, error.status);
         }
-        throw new HttpException({message: 'Error consultando estadisticas de posts'}, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException({message_err: 'Error consultando estadisticas de posts'}, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+    
+    @Patch('status')
+    @HttpCode(200)
+    async setStatus(@Body() postStatus:{data:{status:string, _id:string}}): Promise<any> {
+      try {
+        let res = await this.post.status(postStatus.data);  
+        return ({ data: this.crypto.encryptData(JSON.stringify(res)) })
+      } catch (error) {
+        console.log(error)
+        if (error) {
+          throw new HttpException({message_err: error.message}, error.status);
+        }
+        throw new HttpException({message_err: 'Error consultando estadisticas de posts'}, HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
 }
