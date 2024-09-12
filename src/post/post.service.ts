@@ -107,8 +107,15 @@ export class PostService {
       return res;
     }
     
+    async edit(data:Posts): Promise<any> {
+      let res = await this.postModel.findByIdAndUpdate(new Types.ObjectId(data._id), { status: data.status, image: data.image, message: data.message, location: data.location });
+      let response = await this.postModel.find({ _id: new Types.ObjectId(data._id) });
+      return response;
+    }
+    
     async status(info:{status:string, _id:string}): Promise<any> {
-      let res = await this.postModel.findByIdAndUpdate(info._id, { status: info.status });
-      return res;
+      let res = await this.postModel.findByIdAndUpdate(new Types.ObjectId(info._id), { status: info.status });
+      let response = await this.postModel.find({ _id: new Types.ObjectId(info._id) });
+      return response;
     }
 }

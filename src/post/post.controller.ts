@@ -57,6 +57,22 @@ export class PostController {
       }
     }
     
+    @Post('edit')
+    @HttpCode(200)
+    async editPost(@Body() postInfo:{data:string}): Promise<any> {
+      try {
+        let data:Posts = JSON.parse(this.crypto.decryptData(postInfo.data))
+        let res = await this.post.edit(data);  
+        return ({ data: this.crypto.encryptData(JSON.stringify(res)) })
+      } catch (error) {
+        console.log(error)
+        if (error) {
+          throw new HttpException({message_err: error.message}, error.status);
+        }
+        throw new HttpException({message_err: 'Error consultando estadisticas de posts'}, HttpStatus.INTERNAL_SERVER_ERROR);
+      }
+    }
+    
     @Patch('status')
     @HttpCode(200)
     async setStatus(@Body() postStatus:{data:string}): Promise<any> {
