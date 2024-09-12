@@ -19,7 +19,6 @@ export const StatusSchema = SchemaFactory.createForClass(Status);
 @Schema()
 export class Posts {
     
-    @Prop()
     _id?: Types.ObjectId;
     
     @Prop()
